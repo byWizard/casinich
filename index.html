@@ -3,23 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Мое Казино</title>
+  <title>Казино Вулкан</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Добро пожаловать в мое казино!</h1>
-    <p>Угадай сторону монеты: орёл или решка</p>
 
+  <div class="casino-header">
+    <h1>🎰 КАЗИНО ВУЛКАН 🎰</h1>
+    <p>Баланс: <span id="balance">1000</span> $</p>
+  </div>
+
+  <div class="game-section">
+    <h2>🎯 Угадай монету</h2>
     <select id="guess">
       <option value="орёл">Орёл</option>
       <option value="решка">Решка</option>
     </select>
-
-    <button onclick="play()">Играть</button>
-
+    <input type="number" id="bet" placeholder="Ставка" min="1" max="1000">
+    <button onclick="playCoin()">Играть</button>
     <p id="result"></p>
   </div>
+
+  <div class="game-section">
+    <h2>🎡 Рулетка</h2>
+    <input type="number" id="roulette-bet" placeholder="Ставка" min="1" max="1000">
+    <input type="number" id="roulette-guess" placeholder="Число от 0 до 36" min="0" max="36">
+    <button onclick="spinRoulette()">Крутануть рулетку</button>
+    <p id="roulette-result"></p>
+  </div>
+
+  <canvas id="wheelCanvas" width="400" height="400"></canvas>
+
+  <audio id="winSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4c7296da3d.mp3"></audio>
+  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2021/09/14/audio_c011f23b58.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
