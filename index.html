@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Мое Казино</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Добро пожаловать в мое казино!</h1>
+    <p>Угадай сторону монеты: орёл или решка</p>
+
+    <select id="guess">
+      <option value="орёл">Орёл</option>
+      <option value="решка">Решка</option>
+    </select>
+
+    <button onclick="play()">Играть</button>
+
+    <p id="result"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
