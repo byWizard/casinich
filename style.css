@@ -1,31 +1,64 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #111;
-  color: #fff;
-  text-align: center;
-  padding-top: 50px;
+* {
+  box-sizing: border-box;
 }
 
-.container {
-  max-width: 400px;
-  margin: auto;
-  background-color: #222;
-  padding: 30px;
+body {
+  font-family: 'Orbitron', sans-serif;
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.casino-header {
+  background: linear-gradient(to right, #ff004c, #ffcc00);
+  padding: 20px;
+  text-align: center;
+  color: black;
+  text-shadow: 0 0 5px white;
+}
+
+.casino-header h1 {
+  font-size: 2em;
+}
+
+.game-section {
+  background-color: #111;
+  margin: 20px auto;
+  padding: 20px;
   border-radius: 10px;
+  max-width: 400px;
   box-shadow: 0 0 10px #ff4444;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #ff4444;
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
   border: none;
-  color: white;
+  border-radius: 5px;
   font-size: 16px;
+}
+
+button {
+  background-color: #ff4444;
+  color: white;
+  padding: 10px 20px;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   margin-top: 10px;
+  transition: 0.3s;
+  font-weight: bold;
 }
 
 button:hover {
   background-color: #cc0000;
+}
+
+#wheelCanvas {
+  display: block;
+  margin: 30px auto;
+  border: 5px solid #ff4444;
+  border-radius: 50%;
 }
