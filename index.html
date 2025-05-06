@@ -4,15 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Казино Вулкан</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="casino-header">
-    <h1>🎰 КАЗИНО ВУЛКАН 🎰</h1>
+  <!-- Профиль игрока -->
+  <div class="profile">
+    <img id="avatar" src="assets/images/avatar1.png" alt="Аватар">
+    <h2 id="username">Игрок #1</h2>
     <p>Баланс: <span id="balance">1000</span> $</p>
   </div>
 
+  <!-- Игры -->
   <div class="game-section">
     <h2>🎯 Угадай монету</h2>
     <select id="guess">
@@ -30,13 +34,36 @@
     <input type="number" id="roulette-guess" placeholder="Число от 0 до 36" min="0" max="36">
     <button onclick="spinRoulette()">Крутануть рулетку</button>
     <p id="roulette-result"></p>
+    <canvas id="wheelCanvas" width="400" height="400"></canvas>
   </div>
 
-  <canvas id="wheelCanvas" width="400" height="400"></canvas>
+  <div class="game-section">
+    <h2>🎰 Слот-машина</h2>
+    <div class="slot-machine">
+      <div class="slot" id="slot1">?</div>
+      <div class="slot" id="slot2">?</div>
+      <div class="slot" id="slot3">?</div>
+    </div>
+    <button onclick="playSlots()">Крутить!</button>
+    <p id="slots-result"></p>
+  </div>
 
-  <audio id="winSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4c7296da3d.mp3"></audio>
-  <audio id="clickSound" src="https://cdn.pixabay.com/audio/2021/09/14/audio_c011f23b58.mp3"></audio>
+  <!-- Чат -->
+  <div class="chat-box">
+    <h3>💬 Онлайн-чат</h3>
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Введите сообщение..." onkeydown="handleChatInput(event)">
+  </div>
 
+  <!-- Лидеры -->
+  <div class="leaderboard">
+    <h3>🏆 Таблица лидеров</h3>
+    <ul id="leaderboard-list"></ul>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
