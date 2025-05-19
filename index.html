@@ -3,67 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Казино Вулкан</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <title>Поиск музыки</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .download-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 10px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Профиль игрока -->
-  <div class="profile">
-    <img id="avatar" src="assets/images/avatar1.png" alt="Аватар">
-    <h2 id="username">Игрок #1</h2>
-    <p>Баланс: <span id="balance">1000</span> $</p>
-  </div>
+<h1>🎵 Поиск музыки</h1>
+<input type="text" id="searchInput" placeholder="Введите название песни..." autocomplete="off"/>
+<ul id="results"></ul>
 
-  <!-- Игры -->
-  <div class="game-section">
-    <h2>🎯 Угадай монету</h2>
-    <select id="guess">
-      <option value="орёл">Орёл</option>
-      <option value="решка">Решка</option>
-    </select>
-    <input type="number" id="bet" placeholder="Ставка" min="1" max="1000">
-    <button onclick="playCoin()">Играть</button>
-    <p id="result"></p>
-  </div>
+<script>
+const searchInput = document.getElementById('searchInput');
+const resultsList = document.getElementById('results');
 
-  <div class="game-section">
-    <h2>🎡 Рулетка</h2>
-    <input type="number" id="roulette-bet" placeholder="Ставка" min="1" max="1000">
-    <input type="number" id="roulette-guess" placeholder="Число от 0 до 36" min="0" max="36">
-    <button onclick="spinRoulette()">Крутануть рулетку</button>
-    <p id="roulette-result"></p>
-    <canvas id="wheelCanvas" width="400" height="400"></canvas>
-  </div>
+// === Базовый URL сайта с музыкой ===
+const BASE_URL = 'https://musify.fun ';
 
-  <div class="game-section">
-    <h2>🎰 Слот-машина</h2>
-    <div class="slot-machine">
-      <div class="slot" id="slot1">?</div>
-      <div class="slot" id="slot2">?</div>
-      <div class="slot" id="slot3">?</div>
-    </div>
-    <button onclick="playSlots()">Крутить!</button>
-    <p id="slots-result"></p>
-  </div>
+// === Функция поиска ===
+async function searchMusic(query) {
+  if (!query.trim()) return [];
 
-  <!-- Чат -->
-  <div class="chat-box">
-    <h3>💬 Онлайн-чат</h3>
-    <div id="chat-messages"></div>
-    <input type="text" id="chat-input" placeholder="Введите сообщение..." onkeydown="handleChatInput(event)">
-  </div>
+  const url = `${BASE_URL}/search?query=${encodeURIComponent(query)}`;
+  const res = await fetch(`https://api.allorigins.win/get?url= ${encodeURIComponent(url)}`);
+  const data = await res.json();
 
-  <!-- Лидеры -->
-  <div class="leaderboard">
-    <h3>🏆 Таблица лидеров</h3>
-    <ul id="leaderboard-list"></ul>
-  </div>
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(data.contents, 'text/html');
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-  <script src="script.js"></script>
+  const tracks = [];
+  const items = doc.querySelectorAll('a[href*="/track/"]');
+
+  items.forEach(a => {
+    const title = a.textContent.trim();
+    const href = a.getAttribute('href');
+    tracks.push({ title, url: BASE_URL + href });
+  });
+
+  return [...new Set(tracks.map(t => JSON.stringify(t)))].map(t => JSON.parse(t));
+}
+
+// === Обработчик поиска ===
+searchInput.addEventListener('input', async () => {
+  const query = searchInput.value;
+  resultsList.innerHTML = '<li>Загрузка...</li>';
+
+  try {
+    const tracks = await searchMusic(query);
+
+    if (tracks.length === 0) {
+      resultsList.innerHTML = '<li>Ничего не найдено</li>';
+      return;
+    }
+
+    resultsList.innerHTML = '';
+
+    for (const track of tracks) {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <strong>${track.title}</strong><br/>
+        <a class="download-btn" href="#" onclick="downloadTrack('${track.url}', this)">Скачать</a>
+      `;
+      resultsList.appendChild(li);
+    }
+  } catch (e) {
+    resultsList.innerHTML = `<li>Ошибка: ${e.message}</li>`;
+  }
+});
+
+// === Функция скачивания аудио ===
+async function downloadTrack(trackUrl, btn) {
+  btn.textContent = 'Получаю ссылку...';
+  try {
+    const res = await fetch(`https://api.allorigins.win/get?url= ${encodeURIComponent(trackUrl)}`);
+    const data = await res.json();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data.contents, 'text/html');
+
+    const audio = doc.querySelector('audio source');
+    if (!audio) {
+      btn.textContent = 'Не найден файл';
+      return;
+    }
+
+    const mp3Url = audio.src.startsWith('/') ? BASE_URL + audio.src : audio.src;
+
+    // Создаём временную ссылку и "клик"
+    const a = document.createElement('a');
+    a.href = mp3Url;
+    a.download = mp3Url.split('/').pop();
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    btn.textContent = 'Скачивается...';
+  } catch (e) {
+    btn.textContent = 'Ошибка';
+    console.error(e);
+  }
+}
+</script>
+
 </body>
 </html>
