@@ -58,11 +58,15 @@ async function searchMusic(query) {
   if (!query.trim()) return [];
 
   const url = `${BASE_URL}/search?query=${encodeURIComponent(query)}`;
-  const res = await fetch(`https://api.allorigins.win/get?url= ${encodeURIComponent(url)}`);
-  const data = await res.json();
+  
+  // === МЕНЯЕМ НА РАБОЧИЙ ПРОКСИ ===
+  const proxyUrl = `https://corsproxy.io/? ${encodeURIComponent(url)}`;
+
+  const res = await fetch(proxyUrl);
+  const html = await res.text();
 
   const parser = new DOMParser();
-  const doc = parser.parseFromString(data.contents, 'text/html');
+  const doc = parser.parseFromString(html, 'text/html');
 
   const tracks = [];
   const items = doc.querySelectorAll('a[href*="/track/"]');
@@ -75,7 +79,6 @@ async function searchMusic(query) {
 
   return [...new Set(tracks.map(t => JSON.stringify(t)))].map(t => JSON.parse(t));
 }
-
 // === Обработчик поиска ===
 searchInput.addEventListener('input', async () => {
   const query = searchInput.value;
